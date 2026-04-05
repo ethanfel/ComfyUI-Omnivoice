@@ -9,6 +9,6 @@ dependencies = []
 Repository = "https://github.com/ethanfel/ComfyUI-Omnivoice"
 
 [tool.comfy]
-PublisherId = "Ethanfel"
+PublisherId = "ethanfel"
 DisplayName = "ComfyUI-Omnivoice"
 Icon = ""
