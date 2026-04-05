@@ -59,8 +59,8 @@ class OmniVoiceVoiceDesign:
             },
         }
 
-    RETURN_TYPES  = ("STRING", "STRING")
-    RETURN_NAMES  = ("instruct", "language")
+    RETURN_TYPES  = ("STRING",)
+    RETURN_NAMES  = ("instruct",)
     FUNCTION      = "compose"
     CATEGORY      = "OmniVoice"
 
@@ -68,7 +68,7 @@ class OmniVoiceVoiceDesign:
                 zh_gender="none", zh_age="none", zh_pitch="none", zh_dialect="none"):
         if language == "Chinese":
             parts = [v for v in [zh_gender, zh_age, zh_pitch, zh_dialect] if v != "none"]
-            return ("，".join(parts), "Chinese")
+            return ("，".join(parts),)
         else:
             parts = [v for v in [gender, age, pitch, accent] if v != "none"]
-            return (", ".join(parts), "English")
+            return (", ".join(parts),)

@@ -62,13 +62,6 @@ class OmniVoiceGenerate:
                     "default": "",
                     "tooltip": "Transcription of ref_audio. Connect a Whisper (or other STT) node for best results.",
                 }),
-                "language": ("STRING", {
-                    "default": "auto",
-                    "tooltip": (
-                        "Connect the 'language' output from OmniVoice Voice Design — it sets this automatically.\n"
-                        "Only needed in voice_design/auto_voice mode. Leave 'auto' for voice_cloning."
-                    ),
-                }),
                 "instruct": ("STRING", {
                     "default": "",
                     "tooltip": (
@@ -120,13 +113,11 @@ class OmniVoiceGenerate:
     FUNCTION = "generate"
     CATEGORY = "OmniVoice"
 
-    def generate(self, model, text, mode, ref_audio=None, ref_text="", language="auto",
+    def generate(self, model, text, mode, ref_audio=None, ref_text="",
                  instruct="", guidance_scale=2.0, speed=1.0, num_step=32, seed=0):
         if seed != 0:
             torch.manual_seed(seed)
         kwargs = {"text": text, "speed": speed, "num_step": num_step, "guidance_scale": guidance_scale}
-        if mode != "voice_cloning" and language and language != "auto":
-            kwargs["language"] = language
 
         if mode == "voice_cloning" and ref_audio is None:
             raise ValueError("voice_cloning mode requires ref_audio to be connected")
