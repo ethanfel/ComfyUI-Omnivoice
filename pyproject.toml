@@ -1,5 +1,5 @@
 [project]
-name = "comfyui-omnivoice"
+name = "comfyui-omnivoice-fel"
 description = "ComfyUI nodes for OmniVoice — multilingual zero-shot TTS with voice cloning, voice design, EPUB loading, and voice mixing."
 version = "1.0.0"
 license = { text = "GPL-3.0-only" }
