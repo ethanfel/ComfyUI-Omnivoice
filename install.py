@@ -20,7 +20,7 @@ pip("omnivoice", "--no-deps")
 # Install omnivoice's runtime inference dependencies (excludes torch, torchaudio,
 # gradio, tensorboardX, webdataset which are training/demo-only tools).
 pip(
-    "transformers>=5.0.0",
+    "transformers>=4.40.0,<5.0.0",
     "accelerate",
     "pydub",
     "soundfile",
