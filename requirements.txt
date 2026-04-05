@@ -1,3 +1,4 @@
 # Dependencies are managed by install.py to avoid overwriting ComfyUI's torch.
 # omnivoice pins torch==2.8.* (CUDA 12.8) which would break ComfyUI's torch build.
 # Do not add omnivoice here — install.py handles it with --no-deps.
+# EPUB parsing (OmniVoiceEpubLoader) requires beautifulsoup4 (installed by install.py).

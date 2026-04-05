@@ -25,6 +25,7 @@ pip(
     "pydub",
     "soundfile",
     "numpy",
+    "beautifulsoup4",
 )
 
 print("\n[ComfyUI-Omnivoice] Installation complete.")

@@ -1,7 +1,7 @@
 import tempfile
 import os
 import torch
-import torchaudio
+import soundfile as sf
 
 
 class OmniVoiceGenerate:
@@ -109,7 +109,9 @@ class OmniVoiceGenerate:
             tmp.close()
             try:
                 ref_waveform = ref_audio["waveform"].squeeze(0).cpu()  # (channels, samples)
-                torchaudio.save(tmp_path, ref_waveform, int(ref_audio["sample_rate"]))
+                audio_np = ref_waveform.numpy()
+                # soundfile expects (samples,) for mono or (samples, channels) for multi-channel
+                sf.write(tmp_path, audio_np[0] if audio_np.shape[0] == 1 else audio_np.T, int(ref_audio["sample_rate"]))
                 kwargs["ref_audio"] = tmp_path
                 if ref_text:
                     kwargs["ref_text"] = ref_text

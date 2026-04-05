@@ -75,7 +75,7 @@ def test_generate_voice_cloning():
     ref_waveform = torch.zeros(1, 1, 24000)
     ref_audio_input = {"waveform": ref_waveform, "sample_rate": 24000}
 
-    with patch("nodes.generator.torchaudio.save") as mock_save:
+    with patch("nodes.generator.sf.write") as mock_write:
         result = node.generate(
             model=mock_model,
             text="Hello world",
@@ -86,7 +86,7 @@ def test_generate_voice_cloning():
             num_step=32,
         )
 
-    assert mock_save.called
+    assert mock_write.called
     call_kwargs = mock_model.generate.call_args[1]
     assert call_kwargs["ref_text"] == "reference text"
     assert "ref_audio" in call_kwargs
