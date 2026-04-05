@@ -1,10 +1,11 @@
-from .nodes import OmniVoiceModelLoader, OmniVoiceGenerate, OmniVoiceEpubLoader, OmniVoiceVoicePreset
+from .nodes import OmniVoiceModelLoader, OmniVoiceGenerate, OmniVoiceEpubLoader, OmniVoiceVoicePreset, OmniVoiceMixVoices
 
 NODE_CLASS_MAPPINGS = {
     "OmniVoiceModelLoader": OmniVoiceModelLoader,
     "OmniVoiceGenerate": OmniVoiceGenerate,
     "OmniVoiceEpubLoader": OmniVoiceEpubLoader,
     "OmniVoiceVoicePreset": OmniVoiceVoicePreset,
+    "OmniVoiceMixVoices": OmniVoiceMixVoices,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -12,6 +13,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "OmniVoiceGenerate": "OmniVoice Generate",
     "OmniVoiceEpubLoader": "OmniVoice EPUB Loader",
     "OmniVoiceVoicePreset": "OmniVoice Voice Preset",
+    "OmniVoiceMixVoices": "OmniVoice Mix Voices",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
