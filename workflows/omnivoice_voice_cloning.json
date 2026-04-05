@@ -6,7 +6,7 @@
       "id": 1,
       "type": "OmniVoiceModelLoader",
       "pos": [40, 80],
-      "size": {"0": 300, "1": 100},
+      "size": {"0": 300, "1": 130},
       "flags": {},
       "order": 0,
       "mode": 0,
@@ -14,7 +14,7 @@
         {"name": "model", "type": "OMNIVOICE_MODEL", "links": [1], "shape": 3, "slot_index": 0}
       ],
       "properties": {"Node name for S&R": "OmniVoiceModelLoader"},
-      "widgets_values": ["cuda:0", "float16"]
+      "widgets_values": ["cuda:0", "float16", false]
     },
     {
       "id": 2,
