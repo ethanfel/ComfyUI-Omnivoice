@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-omnivoice-fel"
 description = "ComfyUI nodes for OmniVoice — multilingual zero-shot TTS with voice cloning, voice design, EPUB loading, and voice mixing."
-version = "1.0.0"
+version = "1.0.1"
 license = { text = "GPL-3.0-only" }
 dependencies = []
 
