@@ -29,7 +29,7 @@
         {"name": "ref_text",  "type": "STRING", "links": [3], "shape": 3, "slot_index": 1}
       ],
       "properties": {"Node name for S&R": "OmniVoiceVoicePreset"},
-      "widgets_values": ["Nature – female, warm (F5-TTS ref)"]
+      "widgets_values": ["Shadowheart – female, expressive (Chatterbox)"]
     },
     {
       "id": 3,
