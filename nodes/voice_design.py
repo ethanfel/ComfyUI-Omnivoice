@@ -39,7 +39,7 @@ class OmniVoiceVoiceDesign:
                     ["English", "Chinese"],
                     {
                         "default": "English",
-                        "tooltip": "Selects the instruct vocabulary. Must match the language set in OmniVoice Generate.",
+                        "tooltip": "Selects the instruct vocabulary. The language output wires directly into Generate — no need to set it there too.",
                     },
                 ),
                 "gender": (cls.GENDERS, {"default": "female",
@@ -59,8 +59,8 @@ class OmniVoiceVoiceDesign:
             },
         }
 
-    RETURN_TYPES  = ("STRING",)
-    RETURN_NAMES  = ("instruct",)
+    RETURN_TYPES  = ("STRING", "STRING")
+    RETURN_NAMES  = ("instruct", "language")
     FUNCTION      = "compose"
     CATEGORY      = "OmniVoice"
 
@@ -68,7 +68,7 @@ class OmniVoiceVoiceDesign:
                 zh_gender="none", zh_age="none", zh_pitch="none", zh_dialect="none"):
         if language == "Chinese":
             parts = [v for v in [zh_gender, zh_age, zh_pitch, zh_dialect] if v != "none"]
-            return ("，".join(parts),)
+            return ("，".join(parts), "Chinese")
         else:
             parts = [v for v in [gender, age, pitch, accent] if v != "none"]
-            return (", ".join(parts),)
+            return (", ".join(parts), "English")

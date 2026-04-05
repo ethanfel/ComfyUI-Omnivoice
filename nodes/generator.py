@@ -62,18 +62,13 @@ class OmniVoiceGenerate:
                     "default": "",
                     "tooltip": "Transcription of ref_audio. Connect a Whisper (or other STT) node for best results.",
                 }),
-                "language": (
-                    ["auto", "English", "Chinese"],
-                    {
-                        "default": "auto",
-                        "tooltip": (
-                            "Used in voice_design mode to select the instruct vocabulary.\n"
-                            "'English' uses English instruct items (male, female, british accent …)\n"
-                            "'Chinese' uses Chinese dialect items (男, 女, 四川话, 东北话 …)\n"
-                            "Has no effect in voice_cloning mode (language is inferred from text)."
-                        ),
-                    },
-                ),
+                "language": ("STRING", {
+                    "default": "auto",
+                    "tooltip": (
+                        "Connect the 'language' output from OmniVoice Voice Design — it sets this automatically.\n"
+                        "Only needed in voice_design/auto_voice mode. Leave 'auto' for voice_cloning."
+                    ),
+                }),
                 "instruct": ("STRING", {
                     "default": "",
                     "tooltip": (
