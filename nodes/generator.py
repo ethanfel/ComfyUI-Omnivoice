@@ -38,13 +38,13 @@ class OmniVoiceGenerate:
         if mode == "voice_design" and not instruct:
             raise ValueError("voice_design mode requires an instruct string (e.g. 'female, low pitch')")
 
-        if mode == "voice_cloning" and ref_audio is not None:
+        if mode == "voice_cloning":
             tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
             tmp_path = tmp.name
             tmp.close()
             try:
-                waveform = ref_audio["waveform"].squeeze(0).cpu()  # (channels, samples)
-                torchaudio.save(tmp_path, waveform, int(ref_audio["sample_rate"]))
+                ref_waveform = ref_audio["waveform"].squeeze(0).cpu()  # (channels, samples)
+                torchaudio.save(tmp_path, ref_waveform, int(ref_audio["sample_rate"]))
                 kwargs["ref_audio"] = tmp_path
                 if ref_text:
                     kwargs["ref_text"] = ref_text
