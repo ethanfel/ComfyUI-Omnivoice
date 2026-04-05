@@ -10,8 +10,8 @@ try:
 except ImportError:
     _CACHE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "omnivoice", "presets")
 
-# Each entry: (display_name, url, transcript)
-# transcript="" means unknown — connect a Whisper node to ref_text to fill it.
+# Each entry: (url, transcript)
+# transcript="" means run ref_audio through a Whisper node and connect to ref_text
 PRESETS = {
     "Nature – female, warm (F5-TTS ref)": (
         "https://raw.githubusercontent.com/SWivid/F5-TTS/main/src/f5_tts/infer/examples/basic/basic_ref_en.wav",
@@ -19,7 +19,7 @@ PRESETS = {
     ),
     "Shadowheart – female, expressive (Chatterbox ref)": (
         "https://storage.googleapis.com/chatterbox-demo-samples/prompts/female_shadowheart4.flac",
-        "",  # transcript unknown — connect Whisper node to ref_text
+        "",  # run ref_audio → Whisper → ref_text to fill this
     ),
 }
 
