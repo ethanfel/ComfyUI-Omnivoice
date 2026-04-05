@@ -1,0 +1,3 @@
+omnivoice
+torch
+torchaudio
