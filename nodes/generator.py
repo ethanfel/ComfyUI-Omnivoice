@@ -62,6 +62,14 @@ class OmniVoiceGenerate:
                     "default": "",
                     "tooltip": "Transcription of ref_audio. Connect a Whisper (or other STT) node for best results.",
                 }),
+                "language": (
+                    ["auto", "English", "Chinese", "Japanese", "Korean", "French",
+                     "Spanish", "German", "Portuguese", "Russian", "Arabic", "Hindi"],
+                    {
+                        "default": "auto",
+                        "tooltip": "Language of the text to synthesize. 'auto' lets the model detect it.",
+                    },
+                ),
                 "instruct": ("STRING", {
                     "default": "",
                     "tooltip": (
@@ -77,6 +85,13 @@ class OmniVoiceGenerate:
                         "  indian, chinese, korean, japanese, portuguese, russian\n"
                         "\n"
                         "EXAMPLE:  female, high pitch, british accent"
+                    ),
+                }),
+                "guidance_scale": ("FLOAT", {
+                    "default": 2.0, "min": 0.0, "max": 20.0, "step": 0.1,
+                    "tooltip": (
+                        "Classifier-free guidance scale. Higher = more faithful to the reference/instruct, "
+                        "but can over-saturate. 2.0 is a good default."
                     ),
                 }),
                 "speed": ("FLOAT", {
@@ -104,10 +119,13 @@ class OmniVoiceGenerate:
     FUNCTION = "generate"
     CATEGORY = "OmniVoice"
 
-    def generate(self, model, text, mode, ref_audio=None, ref_text="", instruct="", speed=1.0, num_step=32, seed=0):
+    def generate(self, model, text, mode, ref_audio=None, ref_text="", language="auto",
+                 instruct="", guidance_scale=2.0, speed=1.0, num_step=32, seed=0):
         if seed != 0:
             torch.manual_seed(seed)
-        kwargs = {"text": text, "speed": speed, "num_step": num_step}
+        kwargs = {"text": text, "speed": speed, "num_step": num_step, "guidance_scale": guidance_scale}
+        if language != "auto":
+            kwargs["language"] = language
 
         if mode == "voice_cloning" and ref_audio is None:
             raise ValueError("voice_cloning mode requires ref_audio to be connected")
