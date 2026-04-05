@@ -20,6 +20,9 @@ class _RootDirPlugin:
     """Registered as a plugin so it intercepts hooks before conftest scope limits."""
 
     def pytest_collect_directory(self, path, parent):
+        # NOTE: _pytest.main.Dir is a private pytest internal (tested against pytest 8.x/9.x).
+        # If collection breaks after a pytest upgrade, check if Dir moved or was renamed.
+        # Alternative: add collect_ignore=["__init__.py"] at top of this file.
         from _pytest.main import Dir
         if Path(path) == Path(_root):
             # Return a plain Dir node instead of a Package node for the root,
