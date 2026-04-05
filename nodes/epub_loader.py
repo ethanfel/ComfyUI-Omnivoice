@@ -1,7 +1,10 @@
+import re
 import zipfile
 import io
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
+
+_BLOCK_TAGS = {'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'div', 'br', 'tr'}
 
 
 def _local(tag):
@@ -55,7 +58,13 @@ def _extract_chapters(epub_path):
                     if tag:
                         title = tag.get_text(strip=True)
                         break
-            text = soup.get_text(separator=' ', strip=True)
+            for tag in soup.find_all(_BLOCK_TAGS):
+                tag.append(soup.new_string('\n\n'))
+            text = soup.get_text(separator='')
+            text = re.sub(r'[^\S\n]+', ' ', text)   # collapse inline whitespace
+            text = re.sub(r' *\n *', '\n', text)     # trim spaces around newlines
+            text = re.sub(r'\n{3,}', '\n\n', text)  # max one blank line
+            text = text.strip()
             chapters.append({"title": title, "text": text})
 
     return chapters
