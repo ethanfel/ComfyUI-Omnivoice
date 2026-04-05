@@ -35,7 +35,7 @@
       "id": 3,
       "type": "OmniVoiceGenerate",
       "pos": [420, 80],
-      "size": {"0": 380, "1": 310},
+      "size": {"0": 380, "1": 340},
       "flags": {},
       "order": 2,
       "mode": 0,
@@ -53,7 +53,8 @@
         "voice_cloning",
         "",
         1.0,
-        32
+        32,
+        42
       ]
     },
     {
