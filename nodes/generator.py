@@ -142,16 +142,17 @@ class OmniVoiceGenerate:
                 "instruct": ("STRING", {
                     "default": "",
                     "tooltip": (
-                        "Voice description for voice_design mode. Combine attributes freely.\n"
+                        "Voice style description. Required for voice_design mode; optional in voice_cloning\n"
+                        "mode to attempt accent/style transfer on top of the cloned voice.\n"
+                        "Connect the OmniVoice Voice Design node for structured input.\n"
                         "\n"
                         "GENDER:   male, female\n"
                         "AGE:      child, teenager, young adult, middle-aged, elderly\n"
-                        "PITCH:    very low, low, moderate, high, very high\n"
-                        "STYLE:    whisper\n"
+                        "PITCH:    very low pitch, low pitch, moderate pitch, high pitch, very high pitch, whisper\n"
                         "\n"
-                        "ENGLISH ACCENTS (text must be English):\n"
-                        "  american, british, australian, canadian,\n"
-                        "  indian, chinese, korean, japanese, portuguese, russian\n"
+                        "ACCENT EXAMPLES:\n"
+                        "  british accent, american southern accent, indian accent,\n"
+                        "  australian accent, french accent, japanese accent ...\n"
                         "\n"
                         "EXAMPLE:  female, high pitch, british accent"
                     ),
@@ -213,6 +214,8 @@ class OmniVoiceGenerate:
                 kwargs["ref_audio"] = tmp_path
                 if ref_text:
                     kwargs["ref_text"] = ref_text
+                if instruct:
+                    kwargs["instruct"] = instruct
                 audio_tensors = model.generate(**kwargs)
             finally:
                 try:
