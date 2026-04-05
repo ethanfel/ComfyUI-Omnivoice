@@ -37,10 +37,10 @@ Loads the OmniVoice model. Downloads automatically from HuggingFace on first run
 
 | Input | Type | Description |
 |-------|------|-------------|
-| `model_source` | dropdown | `Auto-download (HuggingFace)` or `Local path` |
-| `local_path` | string | Path to local checkpoint (optional) |
 | `device` | dropdown | `cuda:0`, `cuda:1`, or `cpu` |
 | `dtype` | dropdown | `float16`, `bfloat16`, or `float32` |
+
+Downloads automatically from HuggingFace on first run and caches to `ComfyUI/models/omnivoice/`.
 
 **Output:** `OMNIVOICE_MODEL`
 

@@ -25,10 +25,6 @@ class OmniVoiceModelLoader:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "model_source": (
-                    ["Auto-download (HuggingFace)", "Local path"],
-                    {"default": "Auto-download (HuggingFace)"},
-                ),
                 "device": (
                     ["cuda:0", "cuda:1", "cpu"],
                     {"default": "cuda:0"},
@@ -38,9 +34,6 @@ class OmniVoiceModelLoader:
                     {"default": "float16"},
                 ),
             },
-            "optional": {
-                "local_path": ("STRING", {"default": ""}),
-            },
         }
 
     RETURN_TYPES = ("OMNIVOICE_MODEL",)
@@ -48,19 +41,14 @@ class OmniVoiceModelLoader:
     FUNCTION = "load_model"
     CATEGORY = "OmniVoice"
 
-    def load_model(self, model_source, device, dtype, local_path=""):
+    def load_model(self, device, dtype):
         if OmniVoice is None:
             raise ImportError(
-                "omnivoice is not installed. Run: pip install omnivoice"
+                "omnivoice is not installed. Run: pip install omnivoice --no-deps"
             )
 
-        if model_source == "Local path" and local_path:
-            source = local_path
-        else:
-            source = "k2-fsa/OmniVoice"
-
         model = OmniVoice.from_pretrained(
-            source,
+            "k2-fsa/OmniVoice",
             device_map=device,
             dtype=DTYPE_MAP[dtype],
             cache_dir=CACHE_DIR,

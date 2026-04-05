@@ -20,7 +20,7 @@
         }
       ],
       "properties": {"Node name for S&R": "OmniVoiceModelLoader"},
-      "widgets_values": ["Auto-download (HuggingFace)", "cuda:0", "float16", ""]
+      "widgets_values": ["cuda:0", "float16"]
     },
     {
       "id": 2,
