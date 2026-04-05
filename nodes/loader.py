@@ -1,10 +1,7 @@
 import os
 import torch
 
-try:
-    from omnivoice import OmniVoice
-except ImportError:
-    OmniVoice = None  # type: ignore[assignment,misc]
+from omnivoice import OmniVoice
 
 try:
     import folder_paths
