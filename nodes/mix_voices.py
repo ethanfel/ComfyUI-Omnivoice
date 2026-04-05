@@ -14,10 +14,10 @@ def _resample(waveform, src_sr, dst_sr):
         return waveform
     try:
         import torchaudio
+        # Resample expects (channels, samples), not (batch, channels, samples)
         resampler = torchaudio.transforms.Resample(orig_freq=src_sr, new_freq=dst_sr)
-        return resampler(waveform)
+        return resampler(waveform.squeeze(0)).unsqueeze(0)
     except Exception:
-        # fallback: nearest-neighbour via interpolate
         ratio = dst_sr / src_sr
         new_len = int(waveform.shape[-1] * ratio)
         return torch.nn.functional.interpolate(
@@ -94,29 +94,24 @@ class OmniVoiceMixVoices:
         for audio, weight in zip(audios, weights):
             w = _to_mono(audio["waveform"])           # (1, 1, samples)
             w = _resample(w, audio["sample_rate"], target_sr)
-
-            # trim/repeat to match requested weight in seconds (normalise later)
             clips.append((w, weight))
 
-        # Determine target samples per unit weight
-        # Scale each clip so that weight=1.0 keeps its full length,
-        # and trim/tile accordingly relative to the largest weighted clip.
-        max_samples = max(c.shape[-1] * wt for c, wt in clips)
-        target_per_unit = max_samples  # samples for weight=1.0
-
+        # Each clip contributes (natural_length * weight) samples.
         trimmed = []
         for clip, weight in clips:
-            n_samples = int(target_per_unit * weight)
+            n_samples = int(clip.shape[-1] * weight)
             if n_samples <= 0:
                 continue
             src_len = clip.shape[-1]
             if src_len >= n_samples:
                 trimmed.append(clip[..., :n_samples])
             else:
-                # tile then trim
                 reps = (n_samples // src_len) + 1
                 tiled = clip.repeat(1, 1, reps)
                 trimmed.append(tiled[..., :n_samples])
+
+        if not trimmed:
+            raise ValueError("OmniVoice Mix Voices: all weights are 0 — nothing to mix.")
 
         mixed = torch.cat(trimmed, dim=-1)  # (1, 1, total_samples)
 
