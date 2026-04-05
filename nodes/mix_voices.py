@@ -17,7 +17,7 @@ def _resample(waveform, src_sr, dst_sr):
         # Resample expects (channels, samples), not (batch, channels, samples)
         resampler = torchaudio.transforms.Resample(orig_freq=src_sr, new_freq=dst_sr)
         return resampler(waveform.squeeze(0)).unsqueeze(0)
-    except Exception:
+    except ImportError:
         ratio = dst_sr / src_sr
         new_len = int(waveform.shape[-1] * ratio)
         return torch.nn.functional.interpolate(
