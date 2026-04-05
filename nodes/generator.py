@@ -60,7 +60,7 @@ class OmniVoiceGenerate:
                 }),
                 "ref_text": ("STRING", {
                     "default": "",
-                    "tooltip": "Transcription of ref_audio. Leave blank to auto-transcribe with Whisper.",
+                    "tooltip": "Transcription of ref_audio. Strongly recommended: type it manually. Auto-transcription requires FFmpeg shared libraries; if absent (e.g. some Docker images), generation will fail with a clear error message.",
                 }),
                 "instruct": ("STRING", {
                     "default": "",
@@ -115,7 +115,16 @@ class OmniVoiceGenerate:
                 kwargs["ref_audio"] = tmp_path
                 if ref_text:
                     kwargs["ref_text"] = ref_text
-                audio_tensors = model.generate(**kwargs)
+                try:
+                    audio_tensors = model.generate(**kwargs)
+                except RuntimeError as e:
+                    if "torchcodec" in str(e).lower() or "libtorchcodec" in str(e).lower():
+                        raise RuntimeError(
+                            "Auto-transcription of the reference audio failed because FFmpeg is not "
+                            "available in this environment (required by transformers 5.x for Whisper ASR). "
+                            "Fix: type the transcript of your reference audio into the ref_text field."
+                        ) from None
+                    raise
             finally:
                 try:
                     os.unlink(tmp_path)
