@@ -13,13 +13,13 @@ except ImportError:
 # Each entry: (url, transcript)
 # transcript="" means run ref_audio through a Whisper node and connect to ref_text
 PRESETS = {
-    "Nature – female, warm (F5-TTS ref)": (
+    "Nature – male, warm (F5-TTS ref)": (
         "https://raw.githubusercontent.com/SWivid/F5-TTS/main/src/f5_tts/infer/examples/basic/basic_ref_en.wav",
         "Some call me nature, others call me mother nature.",
     ),
     "Shadowheart – female, expressive (Chatterbox ref)": (
         "https://storage.googleapis.com/chatterbox-demo-samples/prompts/female_shadowheart4.flac",
-        "",  # run ref_audio → Whisper → ref_text to fill this
+        "That place in the distance, it's huge and dedicated to Lady Shar. It can only mean one thing. I have a hidden place close to the cloister where night orchids bloom.",
     ),
 }
 
