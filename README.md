@@ -18,14 +18,13 @@ A ComfyUI custom node for [OmniVoice](https://github.com/k2-fsa/OmniVoice) — a
    git clone https://github.com/ethanfel/ComfyUI-Omnivoice.git
    ```
 
-2. Install dependencies:
+2. Install dependencies **without overwriting ComfyUI's torch**:
    ```bash
-   pip install omnivoice
+   python install.py
    ```
+   > **Warning:** Do NOT run `pip install omnivoice` directly — it pins `torch==2.8.*` from a CUDA 12.8 index and will overwrite ComfyUI's torch installation.
 
 3. Restart ComfyUI. The nodes will appear under the **OmniVoice** category.
-
-> **Note:** OmniVoice requires PyTorch 2.8+ and a CUDA-capable GPU (or Apple Silicon).
 
 ## Nodes
 
