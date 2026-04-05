@@ -87,6 +87,15 @@ class OmniVoiceGenerate:
                     "default": 32, "min": 1, "max": 100,
                     "tooltip": "Diffusion steps. 32 = default quality. 16 = faster, slightly lower quality.",
                 }),
+                "seed": ("INT", {
+                    "default": 0, "min": 0, "max": 2**32 - 1,
+                    "tooltip": (
+                        "Random seed for the diffusion sampler. "
+                        "Set the same value across all Generate nodes in an audiobook pipeline "
+                        "to keep the voice consistent between paragraphs/chapters. "
+                        "0 = random (different each run)."
+                    ),
+                }),
             },
         }
 
@@ -95,7 +104,9 @@ class OmniVoiceGenerate:
     FUNCTION = "generate"
     CATEGORY = "OmniVoice"
 
-    def generate(self, model, text, mode, ref_audio=None, ref_text="", instruct="", speed=1.0, num_step=32):
+    def generate(self, model, text, mode, ref_audio=None, ref_text="", instruct="", speed=1.0, num_step=32, seed=0):
+        if seed != 0:
+            torch.manual_seed(seed)
         kwargs = {"text": text, "speed": speed, "num_step": num_step}
 
         if mode == "voice_cloning" and ref_audio is None:
