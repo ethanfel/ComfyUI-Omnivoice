@@ -9,19 +9,84 @@ class OmniVoiceGenerate:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "model": ("OMNIVOICE_MODEL",),
-                "text": ("STRING", {"multiline": True, "default": ""}),
+                "model": ("OMNIVOICE_MODEL", {
+                    "tooltip": "OmniVoice model loaded by the OmniVoice Model Loader node.",
+                }),
+                "text": ("STRING", {
+                    "multiline": True,
+                    "default": "",
+                    "tooltip": (
+                        "Text to synthesize. Supports inline tags for expression and pronunciation:\n"
+                        "\n"
+                        "NON-VERBAL SOUNDS:\n"
+                        "  [laughter]           – insert a laugh\n"
+                        "  [sigh]               – insert a sigh\n"
+                        "\n"
+                        "QUESTION / CONFIRMATION:\n"
+                        "  [question-en]        – rising English question intonation\n"
+                        "  [confirmation-en]    – confirmation sound\n"
+                        "\n"
+                        "SURPRISE:\n"
+                        "  [surprise-ah]  [surprise-oh]  [surprise-wa]  [surprise-yo]\n"
+                        "\n"
+                        "DISSATISFACTION:\n"
+                        "  [dissatisfaction-hnn]\n"
+                        "\n"
+                        "ENGLISH PRONUNCIATION (CMU phoneme override):\n"
+                        "  You could probably still make [IH1 T] look good.\n"
+                        "\n"
+                        "CHINESE PRONUNCIATION (pinyin + tone number):\n"
+                        "  严重SHE2本了\n"
+                        "\n"
+                        "EXAMPLE:\n"
+                        "  [laughter] You really got me. I didn't see that coming at all."
+                    ),
+                }),
                 "mode": (
                     ["voice_cloning", "voice_design", "auto_voice"],
-                    {"default": "voice_cloning"},
+                    {
+                        "default": "voice_cloning",
+                        "tooltip": (
+                            "voice_cloning  – clone the voice from ref_audio (requires ref_audio)\n"
+                            "voice_design   – describe a voice with the instruct field (requires instruct)\n"
+                            "auto_voice     – model picks a voice automatically"
+                        ),
+                    },
                 ),
             },
             "optional": {
-                "ref_audio": ("AUDIO",),
-                "ref_text": ("STRING", {"default": ""}),
-                "instruct": ("STRING", {"default": ""}),
-                "speed": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 3.0, "step": 0.1}),
-                "num_step": ("INT", {"default": 32, "min": 1, "max": 100}),
+                "ref_audio": ("AUDIO", {
+                    "tooltip": "Reference audio clip to clone the voice from. Used in voice_cloning mode.",
+                }),
+                "ref_text": ("STRING", {
+                    "default": "",
+                    "tooltip": "Transcription of ref_audio. Leave blank to auto-transcribe with Whisper.",
+                }),
+                "instruct": ("STRING", {
+                    "default": "",
+                    "tooltip": (
+                        "Voice description for voice_design mode. Combine attributes freely.\n"
+                        "\n"
+                        "GENDER:   male, female\n"
+                        "AGE:      child, teenager, young adult, middle-aged, elderly\n"
+                        "PITCH:    very low, low, moderate, high, very high\n"
+                        "STYLE:    whisper\n"
+                        "\n"
+                        "ENGLISH ACCENTS (text must be English):\n"
+                        "  american, british, australian, canadian,\n"
+                        "  indian, chinese, korean, japanese, portuguese, russian\n"
+                        "\n"
+                        "EXAMPLE:  female, high pitch, british accent"
+                    ),
+                }),
+                "speed": ("FLOAT", {
+                    "default": 1.0, "min": 0.1, "max": 3.0, "step": 0.1,
+                    "tooltip": "Playback speed multiplier. 1.0 = normal, >1.0 = faster, <1.0 = slower.",
+                }),
+                "num_step": ("INT", {
+                    "default": 32, "min": 1, "max": 100,
+                    "tooltip": "Diffusion steps. 32 = default quality. 16 = faster, slightly lower quality.",
+                }),
             },
         }
 
