@@ -1,7 +1,10 @@
 import os
 import torch
 
-from omnivoice import OmniVoice
+try:
+    from omnivoice import OmniVoice
+except ImportError:
+    OmniVoice = None  # deferred; will raise at runtime if package is missing
 
 try:
     import folder_paths
@@ -46,6 +49,11 @@ class OmniVoiceModelLoader:
     CATEGORY = "OmniVoice"
 
     def load_model(self, model_source, device, dtype, local_path=""):
+        if OmniVoice is None:
+            raise ImportError(
+                "omnivoice is not installed. Run: pip install omnivoice"
+            )
+
         if model_source == "Local path" and local_path:
             source = local_path
         else:
