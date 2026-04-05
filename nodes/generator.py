@@ -150,9 +150,10 @@ class OmniVoiceGenerate:
                         "AGE:      child, teenager, young adult, middle-aged, elderly\n"
                         "PITCH:    very low pitch, low pitch, moderate pitch, high pitch, very high pitch, whisper\n"
                         "\n"
-                        "ACCENT EXAMPLES:\n"
-                        "  british accent, american southern accent, indian accent,\n"
-                        "  australian accent, french accent, japanese accent ...\n"
+                        "ACCENTS (only these are supported by the model):\n"
+                        "  american accent, australian accent, british accent, canadian accent,\n"
+                        "  chinese accent, indian accent, japanese accent, korean accent,\n"
+                        "  portuguese accent, russian accent\n"
                         "\n"
                         "EXAMPLE:  female, high pitch, british accent"
                     ),
