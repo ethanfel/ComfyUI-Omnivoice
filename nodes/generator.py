@@ -44,7 +44,7 @@ class OmniVoiceGenerate:
             tmp.close()
             try:
                 waveform = ref_audio["waveform"].squeeze(0).cpu()  # (channels, samples)
-                torchaudio.save(tmp_path, waveform, ref_audio["sample_rate"])
+                torchaudio.save(tmp_path, waveform, int(ref_audio["sample_rate"]))
                 kwargs["ref_audio"] = tmp_path
                 if ref_text:
                     kwargs["ref_text"] = ref_text
@@ -60,7 +60,7 @@ class OmniVoiceGenerate:
             audio_tensors = model.generate(**kwargs)
 
         # Concatenate chunks: each tensor is (1, T) → concat along T → (1, T_total)
-        combined = torch.cat(audio_tensors, dim=1)  # (1, T_total)
+        combined = torch.cat(audio_tensors, dim=1).cpu()  # (1, T_total) on CPU
         # ComfyUI AUDIO format: (batch, channels, samples)
         waveform = combined.unsqueeze(0)  # (1, 1, T_total)
 
