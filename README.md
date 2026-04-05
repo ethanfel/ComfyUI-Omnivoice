@@ -18,13 +18,16 @@ A ComfyUI custom node for [OmniVoice](https://github.com/k2-fsa/OmniVoice) — a
    git clone https://github.com/ethanfel/ComfyUI-Omnivoice.git
    ```
 
-2. Install `omnivoice` **without its pinned torch** (one-time manual step):
+2. Install via **ComfyUI Manager** (recommended) — it runs `install.py` and `requirements.txt` automatically.
+
+   Or manually:
    ```bash
    pip install omnivoice --no-deps
+   pip install -r requirements.txt
    ```
-   > **Why `--no-deps`?** omnivoice pins `torch==2.8.*` from a CUDA 12.8 index. Installing it normally would overwrite ComfyUI's torch build. The `--no-deps` flag skips that pin; ComfyUI's existing torch works fine at runtime.
+   > **Why `--no-deps` for omnivoice?** It pins `torch==2.8.*` from a CUDA 12.8 index. Installing it normally would overwrite ComfyUI's torch build. `install.py` handles this automatically; `requirements.txt` covers the remaining deps safely.
 
-3. Restart ComfyUI. ComfyUI Manager will install the remaining dependencies from `requirements.txt` automatically. The nodes will appear under the **OmniVoice** category.
+3. Restart ComfyUI. The nodes will appear under the **OmniVoice** category.
 
 ## Nodes
 
