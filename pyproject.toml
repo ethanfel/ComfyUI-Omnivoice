@@ -2,9 +2,10 @@
 name = "comfyui-omnivoice"
 description = "ComfyUI nodes for OmniVoice — multilingual zero-shot TTS with voice cloning, voice design, EPUB loading, and voice mixing."
 version = "1.0.0"
-license = { file = "LICENSE" }
+license = "GPL-3.0-only"
 
 [tool.comfy]
 PublisherId = "ethanfel"
 DisplayName = "ComfyUI-Omnivoice"
 Icon = ""
+Repository = "https://github.com/ethanfel/ComfyUI-Omnivoice"
