@@ -1,55 +1,115 @@
 {
   "id": "85925298-bd01-4df7-b8e5-ac92f9d6582e",
   "revision": 0,
-  "last_node_id": 6,
-  "last_link_id": 9,
+  "last_node_id": 14,
+  "last_link_id": 30,
   "nodes": [
     {
-      "id": 1,
-      "type": "OmniVoiceModelLoader",
+      "id": 6,
+      "type": "PreviewAudio",
       "pos": [
-        32,
+        928,
         96
       ],
       "size": [
-        320,
-        160
+        448,
+        96
       ],
       "flags": {},
-      "order": 0,
+      "order": 4,
       "mode": 0,
-      "inputs": [],
-      "outputs": [
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 27
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.18.1",
+        "Node name for S&R": "PreviewAudio",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 14,
+      "type": "OmniVoiceGenerate",
+      "pos": [
+        512,
+        96
+      ],
+      "size": [
+        384,
+        448
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
         {
           "name": "model",
           "type": "OMNIVOICE_MODEL",
-          "slot_index": 0,
+          "link": 23
+        },
+        {
+          "name": "ref_audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 29
+        },
+        {
+          "name": "ref_text",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "ref_text"
+          },
+          "link": 30
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
           "links": [
-            5
+            27
           ]
         }
       ],
       "properties": {
-        "aux_id": "ethanfel/ComfyUI-Omnivoice",
-        "ver": "9b62c9bda8469171025709e2fae3ce877ee0f059",
-        "Node name for S&R": "OmniVoiceModelLoader",
+        "cnr_id": "comfyui-omnivoice-fel",
+        "ver": "340c0aa402fdf8b56fad5eb1559ff901c7fc7cfc",
+        "Node name for S&R": "OmniVoiceGenerate",
         "ue_properties": {
           "widget_ue_connectable": {},
-          "version": "7.8",
-          "input_ue_unconnectable": {}
+          "input_ue_unconnectable": {},
+          "version": "7.8"
         }
       },
       "widgets_values": [
-        "cuda:0",
-        "float16",
-        false
+        "Hello! This is a test of the OmniVoice text-to-speech system.",
+        "voice_cloning",
+        "",
+        "",
+        2,
+        1,
+        32,
+        42,
+        "fixed"
       ]
     },
     {
       "id": 2,
       "type": "OmniVoiceVoicePreset",
       "pos": [
-        32,
+        64,
         320
       ],
       "size": [
@@ -57,7 +117,7 @@
         128
       ],
       "flags": {},
-      "order": 1,
+      "order": 0,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -66,7 +126,7 @@
           "type": "AUDIO",
           "slot_index": 0,
           "links": [
-            6
+            29
           ]
         },
         {
@@ -74,14 +134,15 @@
           "type": "STRING",
           "slot_index": 1,
           "links": [
-            7
+            30
           ]
         }
       ],
       "properties": {
-        "aux_id": "ethanfel/ComfyUI-Omnivoice",
+        "cnr_id": "comfyui-omnivoice-fel",
         "ver": "9b62c9bda8469171025709e2fae3ce877ee0f059",
         "Node name for S&R": "OmniVoiceVoicePreset",
+        "aux_id": "ethanfel/ComfyUI-Omnivoice",
         "ue_properties": {
           "widget_ue_connectable": {},
           "version": "7.8",
@@ -93,136 +154,124 @@
       ]
     },
     {
-      "id": 5,
-      "type": "OmniVoiceGenerate",
+      "id": 1,
+      "type": "OmniVoiceModelLoader",
       "pos": [
-        416,
+        64,
         96
       ],
       "size": [
-        384,
-        448
+        320,
+        160
       ],
       "flags": {},
-      "order": 2,
+      "order": 1,
       "mode": 0,
-      "inputs": [
+      "inputs": [],
+      "outputs": [
         {
           "name": "model",
           "type": "OMNIVOICE_MODEL",
-          "link": 5
-        },
-        {
-          "name": "ref_audio",
-          "shape": 7,
-          "type": "AUDIO",
-          "link": 6
-        },
-        {
-          "name": "ref_text",
-          "shape": 7,
-          "type": "STRING",
-          "widget": {
-            "name": "ref_text"
-          },
-          "link": 7
-        }
-      ],
-      "outputs": [
-        {
-          "name": "audio",
-          "type": "AUDIO",
+          "slot_index": 0,
           "links": [
-            9
+            23
           ]
         }
       ],
       "properties": {
+        "cnr_id": "comfyui-omnivoice-fel",
+        "ver": "9b62c9bda8469171025709e2fae3ce877ee0f059",
+        "Node name for S&R": "OmniVoiceModelLoader",
+        "aux_id": "ethanfel/ComfyUI-Omnivoice",
         "ue_properties": {
           "widget_ue_connectable": {},
+          "version": "7.8",
           "input_ue_unconnectable": {}
-        },
-        "aux_id": "ethanfel/ComfyUI-Omnivoice",
-        "ver": "9b62c9bda8469171025709e2fae3ce877ee0f059",
-        "Node name for S&R": "OmniVoiceGenerate"
+        }
       },
       "widgets_values": [
-        "Hello! This is a test of the OmniVoice text-to-speech system.",
-        "voice_cloning",
-        "",
-        "",
-        1,
-        32,
-        42,
-        "fixed"
+        "cuda:0",
+        "float32",
+        false
       ]
     },
     {
-      "id": 6,
-      "type": "PreviewAudio",
+      "id": 13,
+      "type": "OmniVoiceVoiceDesign",
       "pos": [
-        832,
-        96
+        64,
+        512
       ],
       "size": [
-        270,
-        88
+        288,
+        288
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
-      "inputs": [
+      "inputs": [],
+      "outputs": [
         {
-          "name": "audio",
-          "type": "AUDIO",
-          "link": 9
+          "name": "instruct",
+          "type": "STRING",
+          "links": []
         }
       ],
-      "outputs": [],
       "properties": {
+        "cnr_id": "comfyui-omnivoice-fel",
+        "ver": "340c0aa402fdf8b56fad5eb1559ff901c7fc7cfc",
+        "Node name for S&R": "OmniVoiceVoiceDesign",
         "ue_properties": {
           "widget_ue_connectable": {},
-          "input_ue_unconnectable": {}
-        },
-        "cnr_id": "comfy-core",
-        "ver": "0.18.1",
-        "Node name for S&R": "PreviewAudio"
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
       },
-      "widgets_values": []
+      "widgets_values": [
+        "English",
+        "none",
+        "none",
+        "none",
+        "american accent",
+        "none",
+        "none",
+        "none",
+        "none"
+      ]
     }
   ],
   "links": [
     [
-      5,
+      23,
       1,
       0,
-      5,
+      14,
       0,
       "OMNIVOICE_MODEL"
     ],
     [
+      27,
+      14,
+      0,
       6,
+      0,
+      "AUDIO"
+    ],
+    [
+      29,
       2,
       0,
-      5,
+      14,
       1,
       "AUDIO"
     ],
     [
-      7,
+      30,
       2,
       1,
-      5,
+      14,
       2,
       "STRING"
-    ],
-    [
-      9,
-      5,
-      0,
-      6,
-      0,
-      "AUDIO"
     ]
   ],
   "groups": [],
@@ -231,8 +280,8 @@
     "ds": {
       "scale": 1.201632379715383,
       "offset": [
-        1340.797529638862,
-        246.44960712937743
+        1415.539606763376,
+        123.61214765199416
       ]
     },
     "ue_links": [],
