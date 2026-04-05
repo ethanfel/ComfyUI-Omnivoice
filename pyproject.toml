@@ -4,8 +4,10 @@ description = "ComfyUI nodes for OmniVoice — multilingual zero-shot TTS with v
 version = "1.0.0"
 license = "GPL-3.0-only"
 
+[project.urls]
+Repository = "https://github.com/ethanfel/ComfyUI-Omnivoice"
+
 [tool.comfy]
 PublisherId = "ethanfel"
 DisplayName = "ComfyUI-Omnivoice"
 Icon = ""
-Repository = "https://github.com/ethanfel/ComfyUI-Omnivoice"
