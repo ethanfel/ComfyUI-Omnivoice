@@ -62,83 +62,6 @@ class OmniVoiceGenerate:
                     "default": "",
                     "tooltip": "Transcription of ref_audio. Connect a Whisper (or other STT) node for best results.",
                 }),
-                "language": (
-                    [
-                        "auto",
-                        # A
-                        "Abkhazian", "Afar", "Afrikaans", "Akan", "Albanian", "Amharic",
-                        "Arabic", "Aragonese", "Armenian", "Assamese", "Avaric", "Avestan",
-                        "Aymara", "Azerbaijani",
-                        # B
-                        "Bambara", "Bashkir", "Basque", "Belarusian", "Bengali", "Bihari",
-                        "Bislama", "Bosnian", "Breton", "Bulgarian", "Burmese",
-                        # C
-                        "Catalan", "Chamorro", "Chechen", "Chichewa", "Chinese (Mandarin)",
-                        "Chinese (Cantonese)", "Chuvash", "Cornish", "Corsican", "Cree",
-                        "Croatian", "Czech",
-                        # D
-                        "Danish", "Divehi", "Dutch", "Dzongkha",
-                        # E
-                        "English", "Esperanto", "Estonian", "Ewe",
-                        # F
-                        "Faroese", "Fijian", "Finnish", "French", "Fula",
-                        # G
-                        "Galician", "Georgian", "German", "Greek", "Guaraní", "Gujarati",
-                        # H
-                        "Haitian Creole", "Hausa", "Hebrew", "Herero", "Hindi", "Hiri Motu",
-                        "Hungarian",
-                        # I
-                        "Interlingua", "Indonesian", "Igbo", "Inuktitut", "Irish",
-                        "Italian",
-                        # J
-                        "Japanese", "Javanese",
-                        # K
-                        "Kannada", "Kanuri", "Kashmiri", "Kazakh", "Khmer", "Kikuyu",
-                        "Kinyarwanda", "Komi", "Kongo", "Korean", "Kurdish", "Kyrgyz",
-                        # L
-                        "Lao", "Latin", "Latvian", "Limburgish", "Lingala", "Lithuanian",
-                        "Luganda", "Luxembourgish",
-                        # M
-                        "Macedonian", "Malagasy", "Malay", "Malayalam", "Maltese", "Manx",
-                        "Maori", "Marathi", "Marshallese", "Mongolian",
-                        # N
-                        "Nauruan", "Navajo", "Nepali", "Northern Sami", "Norwegian",
-                        "Norwegian Bokmål", "Norwegian Nynorsk",
-                        # O
-                        "Occitan", "Ojibwe", "Odia", "Oromo", "Ossetian",
-                        # P
-                        "Pali", "Pashto", "Persian", "Polish", "Portuguese",
-                        "Punjabi",
-                        # Q
-                        "Quechua",
-                        # R
-                        "Romanian", "Romansh", "Russian",
-                        # S
-                        "Samoan", "Sango", "Sanskrit", "Serbian", "Shona", "Sindhi",
-                        "Sinhala", "Slovak", "Slovenian", "Somali", "Southern Sotho",
-                        "Spanish", "Sundanese", "Swahili", "Swati", "Swedish",
-                        # T
-                        "Tagalog", "Tahitian", "Tajik", "Tamil", "Tatar", "Telugu",
-                        "Thai", "Tibetan", "Tigrinya", "Tonga", "Tsonga", "Tswana",
-                        "Turkish", "Turkmen", "Twi",
-                        # U
-                        "Ukrainian", "Urdu", "Uyghur", "Uzbek",
-                        # V
-                        "Vietnamese", "Volapük",
-                        # W
-                        "Walloon", "Welsh", "Western Frisian", "Wolof",
-                        # X
-                        "Xhosa",
-                        # Y
-                        "Yiddish", "Yoruba",
-                        # Z
-                        "Zhuang", "Zulu",
-                    ],
-                    {
-                        "default": "auto",
-                        "tooltip": "Language of the text. Type to filter. OmniVoice supports 600+ languages — use 'auto' when unsure.",
-                    },
-                ),
                 "instruct": ("STRING", {
                     "default": "",
                     "tooltip": (
@@ -190,13 +113,11 @@ class OmniVoiceGenerate:
     FUNCTION = "generate"
     CATEGORY = "OmniVoice"
 
-    def generate(self, model, text, mode, ref_audio=None, ref_text="", language="auto",
+    def generate(self, model, text, mode, ref_audio=None, ref_text="",
                  instruct="", guidance_scale=2.0, speed=1.0, num_step=32, seed=0):
         if seed != 0:
             torch.manual_seed(seed)
         kwargs = {"text": text, "speed": speed, "num_step": num_step, "guidance_scale": guidance_scale}
-        if language and language != "auto":
-            kwargs["language"] = language
 
         if mode == "voice_cloning" and ref_audio is None:
             raise ValueError("voice_cloning mode requires ref_audio to be connected")
