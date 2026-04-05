@@ -50,7 +50,10 @@ class OmniVoiceGenerate:
                     kwargs["ref_text"] = ref_text
                 audio_tensors = model.generate(**kwargs)
             finally:
-                os.unlink(tmp_path)
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
 
         elif mode == "voice_design" and instruct:
             kwargs["instruct"] = instruct
