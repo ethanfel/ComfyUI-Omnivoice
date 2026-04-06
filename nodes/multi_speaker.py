@@ -45,6 +45,13 @@ class OmniVoiceSpeakers:
 
     @classmethod
     def INPUT_TYPES(cls):
+        # speaker_1…speaker_8 are declared here so ComfyUI validation accepts them.
+        # Visibility is controlled by the JS extension (web/multi_speaker.js):
+        # only the first num_speakers slots are shown as live inputs.
+        optional_speakers = {
+            f"speaker_{i}": ("OMNIVOICE_SPEAKER", {})
+            for i in range(1, 9)
+        }
         return {
             "required": {
                 "num_speakers": ("INT", {
@@ -74,8 +81,7 @@ class OmniVoiceSpeakers:
                     },
                 ),
             },
-            # speaker_1 … speaker_8 are added/removed dynamically by the JS extension.
-            # They are not listed here so ComfyUI does not render them as static widgets.
+            "optional": optional_speakers,
         }
 
     RETURN_TYPES = ("OMNIVOICE_SPEAKERS",)
