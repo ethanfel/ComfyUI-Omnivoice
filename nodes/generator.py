@@ -4,7 +4,7 @@ import os
 import torch
 import soundfile as sf
 
-_TAG_RE = re.compile(r'^\[([^\]]+)\]\s*(.*)', re.DOTALL)
+_TAG_RE = re.compile(r'^\[([^\]]+)\]:?\s*(.*)', re.DOTALL)
 
 
 def _write_tmp_wav(ref_audio):
