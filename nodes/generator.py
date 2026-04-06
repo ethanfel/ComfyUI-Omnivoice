@@ -1,7 +1,25 @@
+import re
 import tempfile
 import os
 import torch
 import soundfile as sf
+
+_TAG_RE = re.compile(r'^\[([^\]]+)\]\s*(.*)', re.DOTALL)
+
+
+def _write_tmp_wav(ref_audio):
+    """Write a ComfyUI AUDIO dict to a temp WAV file. Returns the path (caller must delete)."""
+    tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+    tmp_path = tmp.name
+    tmp.close()
+    waveform = ref_audio["waveform"].squeeze(0).cpu()  # (channels, samples)
+    audio_np = waveform.numpy()
+    sf.write(
+        tmp_path,
+        audio_np[0] if audio_np.shape[0] == 1 else audio_np.T,
+        int(ref_audio["sample_rate"]),
+    )
+    return tmp_path
 
 
 class OmniVoiceGenerate:
@@ -49,12 +67,21 @@ class OmniVoiceGenerate:
                         "tooltip": (
                             "voice_cloning  – clone the voice from ref_audio (requires ref_audio)\n"
                             "voice_design   – describe a voice with the instruct field (requires instruct)\n"
-                            "auto_voice     – model picks a voice automatically"
+                            "auto_voice     – model picks a voice automatically\n"
+                            "\n"
+                            "Ignored when a Speakers roster is connected."
                         ),
                     },
                 ),
             },
             "optional": {
+                "speakers": ("OMNIVOICE_SPEAKERS", {
+                    "tooltip": (
+                        "Connect an OmniVoice Speakers node to enable multi-speaker generation.\n"
+                        "When connected, ref_audio / instruct / mode are ignored and each paragraph\n"
+                        "is routed to its assigned speaker automatically."
+                    ),
+                }),
                 "ref_audio": ("AUDIO", {
                     "tooltip": "Reference audio clip to clone the voice from. Used in voice_cloning mode.",
                 }),
@@ -113,10 +140,16 @@ class OmniVoiceGenerate:
     FUNCTION = "generate"
     CATEGORY = "OmniVoice"
 
-    def generate(self, model, text, mode, ref_audio=None, ref_text="",
+    def generate(self, model, text, mode, speakers=None, ref_audio=None, ref_text="",
                  instruct="", guidance_scale=2.0, speed=1.0, num_step=32, seed=0):
         if seed != 0:
             torch.manual_seed(seed)
+
+        if speakers is not None:
+            return self._generate_multi_speaker(
+                model, text, speakers, guidance_scale, speed, num_step
+            )
+
         kwargs = {"text": text, "speed": speed, "num_step": num_step, "guidance_scale": guidance_scale}
 
         if mode == "voice_cloning" and ref_audio is None:
@@ -125,14 +158,8 @@ class OmniVoiceGenerate:
             raise ValueError("voice_design mode requires an instruct string (e.g. 'female, low pitch')")
 
         if mode == "voice_cloning":
-            tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-            tmp_path = tmp.name
-            tmp.close()
+            tmp_path = _write_tmp_wav(ref_audio)
             try:
-                ref_waveform = ref_audio["waveform"].squeeze(0).cpu()  # (channels, samples)
-                audio_np = ref_waveform.numpy()
-                # soundfile expects (samples,) for mono or (samples, channels) for multi-channel
-                sf.write(tmp_path, audio_np[0] if audio_np.shape[0] == 1 else audio_np.T, int(ref_audio["sample_rate"]))
                 kwargs["ref_audio"] = tmp_path
                 if ref_text:
                     kwargs["ref_text"] = ref_text
@@ -152,9 +179,64 @@ class OmniVoiceGenerate:
         else:  # auto_voice or fallback
             audio_tensors = model.generate(**kwargs)
 
-        # Concatenate chunks: each tensor is (1, T) → concat along T → (1, T_total)
-        combined = torch.cat(audio_tensors, dim=1).cpu()  # (1, T_total) on CPU
-        # ComfyUI AUDIO format: (batch, channels, samples)
-        waveform = combined.unsqueeze(0)  # (1, 1, T_total)
+        return self._tensors_to_audio(audio_tensors)
 
+    def _generate_multi_speaker(self, model, text, speakers_data, guidance_scale, speed, num_step):
+        speaker_list = speakers_data["speakers"]
+        spk_mode = speakers_data["mode"]
+        label_map = {s["label"].lower(): i for i, s in enumerate(speaker_list)}
+
+        paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+        if not paragraphs:
+            raise ValueError("OmniVoice Multi-Speaker: no paragraphs found in text.")
+
+        if spk_mode == "alternate_paragraphs":
+            segments = [
+                (para, speaker_list[i % len(speaker_list)])
+                for i, para in enumerate(paragraphs)
+            ]
+        else:  # tagged_speakers
+            segments = []
+            for para in paragraphs:
+                m = _TAG_RE.match(para)
+                if m:
+                    tag = m.group(1).strip().lower()
+                    body = m.group(2).strip()
+                    spk = speaker_list[label_map.get(tag, 0)]
+                else:
+                    body = para
+                    spk = speaker_list[0]
+                if body:
+                    segments.append((body, spk))
+
+        if not segments:
+            raise ValueError("OmniVoice Multi-Speaker: no text segments to generate.")
+
+        all_chunks = []
+        for para_text, spk in segments:
+            tmp_path = _write_tmp_wav(spk["ref_audio"])
+            try:
+                kwargs = {
+                    "text": para_text,
+                    "ref_audio": tmp_path,
+                    "speed": speed,
+                    "num_step": num_step,
+                    "guidance_scale": guidance_scale,
+                }
+                if spk["ref_text"]:
+                    kwargs["ref_text"] = spk["ref_text"]
+                chunks = model.generate(**kwargs)
+                all_chunks.extend(chunks)
+            finally:
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
+
+        return self._tensors_to_audio(all_chunks)
+
+    @staticmethod
+    def _tensors_to_audio(tensors):
+        combined = torch.cat(tensors, dim=1).cpu()  # (1, T_total)
+        waveform = combined.unsqueeze(0)             # (1, 1, T_total)
         return ({"waveform": waveform, "sample_rate": 24000},)

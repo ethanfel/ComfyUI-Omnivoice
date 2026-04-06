@@ -1,4 +1,4 @@
-from .nodes import OmniVoiceModelLoader, OmniVoiceGenerate, OmniVoiceEpubLoader, OmniVoiceVoicePreset, OmniVoiceMixVoices, OmniVoiceVoiceDesign
+from .nodes import OmniVoiceModelLoader, OmniVoiceGenerate, OmniVoiceEpubLoader, OmniVoiceVoicePreset, OmniVoiceMixVoices, OmniVoiceVoiceDesign, OmniVoiceSpeaker, OmniVoiceSpeakers
 
 NODE_CLASS_MAPPINGS = {
     "OmniVoiceModelLoader": OmniVoiceModelLoader,
@@ -7,6 +7,8 @@ NODE_CLASS_MAPPINGS = {
     "OmniVoiceVoicePreset": OmniVoiceVoicePreset,
     "OmniVoiceMixVoices": OmniVoiceMixVoices,
     "OmniVoiceVoiceDesign": OmniVoiceVoiceDesign,
+    "OmniVoiceSpeaker": OmniVoiceSpeaker,
+    "OmniVoiceSpeakers": OmniVoiceSpeakers,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -16,6 +18,10 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "OmniVoiceVoicePreset": "OmniVoice Voice Preset",
     "OmniVoiceMixVoices": "OmniVoice Mix Voices",
     "OmniVoiceVoiceDesign": "OmniVoice Voice Design",
+    "OmniVoiceSpeaker": "OmniVoice Speaker",
+    "OmniVoiceSpeakers": "OmniVoice Speakers",
 }
 
-__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
+WEB_DIRECTORY = "./web"
+
+__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
