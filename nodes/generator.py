@@ -186,25 +186,46 @@ class OmniVoiceGenerate:
         spk_mode = speakers_data["mode"]
         label_map = {s["label"].lower(): i for i, s in enumerate(speaker_list)}
 
-        paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
-        if not paragraphs:
-            raise ValueError("OmniVoice Multi-Speaker: no paragraphs found in text.")
-
         if spk_mode == "alternate_paragraphs":
+            paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+            if not paragraphs:
+                raise ValueError("OmniVoice Multi-Speaker: no paragraphs found in text.")
             segments = [
                 (para, speaker_list[i % len(speaker_list)])
                 for i, para in enumerate(paragraphs)
             ]
         else:  # tagged_speakers
+            # In tagged mode each line that starts with [Tag] begins a new segment.
+            # Continuation lines (no tag) are appended to the previous segment so
+            # multi-line speeches stay together. Both \n and \n\n separators work.
+            raw_segments: list[list[str]] = []
+            current: list[str] = []
+            for line in text.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                if _TAG_RE.match(line):
+                    if current:
+                        raw_segments.append(current)
+                    current = [line]
+                else:
+                    current.append(line)
+            if current:
+                raw_segments.append(current)
+
+            if not raw_segments:
+                raise ValueError("OmniVoice Multi-Speaker: no tagged segments found in text.")
+
             segments = []
-            for para in paragraphs:
-                m = _TAG_RE.match(para)
+            for lines in raw_segments:
+                joined = " ".join(lines)
+                m = _TAG_RE.match(joined)
                 if m:
                     tag = m.group(1).strip().lower()
                     body = m.group(2).strip()
                     spk = speaker_list[label_map.get(tag, 0)]
                 else:
-                    body = para
+                    body = joined
                     spk = speaker_list[0]
                 if body:
                     segments.append((body, spk))
