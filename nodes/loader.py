@@ -1,10 +1,12 @@
 import os
 import torch
 
+_omnivoice_import_error = None
 try:
     from omnivoice import OmniVoice
-except ImportError:
-    OmniVoice = None  # deferred; will raise at runtime if package is missing
+except Exception as e:
+    OmniVoice = None
+    _omnivoice_import_error = e
 
 try:
     import folder_paths
@@ -55,9 +57,14 @@ class OmniVoiceModelLoader:
 
     def load_model(self, device, dtype, compile=False):
         if OmniVoice is None:
-            raise ImportError(
-                "omnivoice is not installed. Run: pip install omnivoice --no-deps"
+            msg = (
+                "omnivoice failed to import. "
+                "Install it with: pip install omnivoice --no-deps\n"
+                "(On Windows embedded Python: .\\python_embeded\\python.exe -m pip install omnivoice --no-deps)\n"
             )
+            if _omnivoice_import_error is not None:
+                msg += f"\nOriginal error: {_omnivoice_import_error}"
+            raise ImportError(msg)
 
         model = OmniVoice.from_pretrained(
             "k2-fsa/OmniVoice",
