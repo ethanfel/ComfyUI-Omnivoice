@@ -58,14 +58,14 @@ def test_input_types_structure():
 
 
 def test_return_types():
-    assert OmniVoiceEpubLoader.RETURN_TYPES == ("STRING", "STRING")
-    assert OmniVoiceEpubLoader.RETURN_NAMES == ("text", "chapter_list")
+    assert OmniVoiceEpubLoader.RETURN_TYPES == ("STRING", "STRING", "STRING")
+    assert OmniVoiceEpubLoader.RETURN_NAMES == ("text", "chapter_title", "chapter_list")
 
 
 def test_chapter_extraction_basic():
     epub = make_fake_epub([("Intro", "<p>Hello world</p>"), ("Chapter One", "<p>Body here</p>")])
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(epub)):
-        text, chapter_list = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 2)
+        text, chapter_title, chapter_list = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 2)
     assert "Hello world" in text
     assert "Body here" in text
     assert "---" in text
@@ -75,7 +75,7 @@ def test_chapter_extraction_basic():
 def test_chapter_range_single():
     epub = make_fake_epub([("One", "<p>First</p>"), ("Two", "<p>Second</p>"), ("Three", "<p>Third</p>")])
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(epub)):
-        text, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 2, 2)
+        text, _, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 2, 2)
     assert "Second" in text
     assert "First" not in text
     assert "Third" not in text
@@ -84,7 +84,7 @@ def test_chapter_range_single():
 def test_chapter_list_contains_all():
     epub = make_fake_epub([("A", ""), ("B", ""), ("C", "")])
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(epub)):
-        _, chapter_list = OmniVoiceEpubLoader().load_epub('/fake.epub', 2, 2)
+        _, _, chapter_list = OmniVoiceEpubLoader().load_epub('/fake.epub', 2, 2)
     lines = chapter_list.strip().splitlines()
     assert len(lines) == 3
     assert lines[0].startswith("1.")
@@ -94,14 +94,14 @@ def test_chapter_list_contains_all():
 def test_range_clamping_high():
     epub = make_fake_epub([("A", "<p>aaa</p>"), ("B", "<p>bbb</p>")])
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(epub)):
-        text, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 99)
+        text, _, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 99)
     assert "aaa" in text and "bbb" in text
 
 
 def test_range_clamping_end_below_start():
     epub = make_fake_epub([("A", "<p>aaa</p>"), ("B", "<p>bbb</p>")])
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(epub)):
-        text, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 2, 1)
+        text, _, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 2, 1)
     assert "bbb" in text
     assert "aaa" not in text
 
@@ -119,14 +119,14 @@ def test_missing_title_fallback():
         z.writestr('OEBPS/ch0.xhtml', '<html><body><p>No title here</p></body></html>')
     buf.seek(0)
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(buf.read())):
-        _, chapter_list = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 1)
+        _, _, chapter_list = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 1)
     assert "1. Chapter 1" in chapter_list
 
 
 def test_script_style_stripped():
     epub = make_fake_epub([("Test", '<script>alert("xss")</script><style>color:red</style><p>clean</p>')])
     with patch('nodes.epub_loader.zipfile.ZipFile', side_effect=epub_opener(epub)):
-        text, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 1)
+        text, _, _ = OmniVoiceEpubLoader().load_epub('/fake.epub', 1, 1)
     assert "alert" not in text
     assert "color" not in text
     assert "clean" in text

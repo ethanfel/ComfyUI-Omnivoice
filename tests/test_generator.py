@@ -46,7 +46,7 @@ def test_generate_auto_voice():
     assert "sample_rate" in audio
     assert audio["sample_rate"] == 24000
     mock_model.generate.assert_called_once_with(
-        text="Hello world", speed=1.0, num_step=32
+        text="Hello world", speed=1.0, num_step=32, guidance_scale=2.0
     )
 
 
@@ -64,7 +64,7 @@ def test_generate_voice_design():
     audio = result[0]
     assert audio["sample_rate"] == 24000
     mock_model.generate.assert_called_once_with(
-        text="Hello world", instruct="female, low pitch", speed=1.0, num_step=32
+        text="Hello world", instruct="female, low pitch", speed=1.0, num_step=32, guidance_scale=2.0
     )
 
 
