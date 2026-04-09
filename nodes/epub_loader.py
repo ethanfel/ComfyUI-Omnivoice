@@ -90,8 +90,8 @@ class OmniVoiceEpubLoader:
             },
         }
 
-    RETURN_TYPES = ("STRING", "STRING")
-    RETURN_NAMES = ("text", "chapter_list")
+    RETURN_TYPES = ("STRING", "STRING", "STRING")
+    RETURN_NAMES = ("text", "chapter_title", "chapter_list")
     FUNCTION = "load_epub"
     CATEGORY = "OmniVoice"
 
@@ -100,7 +100,7 @@ class OmniVoiceEpubLoader:
         n = len(chapters)
 
         if n == 0:
-            return ("", "")
+            return ("", "", "")
 
         start = max(1, min(chapter_start, n))
         end   = max(start, min(chapter_end, n))
@@ -111,8 +111,12 @@ class OmniVoiceEpubLoader:
             for i, ch in enumerate(chapters, 1)
         )
 
+        # chapter_title: title of the first selected chapter (useful for file naming)
+        first = chapters[start - 1]
+        chapter_title = first["title"] if first["title"] else f"Chapter {start}"
+
         # text: selected range joined by delimiter
         selected = chapters[start - 1 : end]
         text = "\n\n---\n\n".join(ch["text"] for ch in selected)
 
-        return (text, chapter_list)
+        return (text, chapter_title, chapter_list)
