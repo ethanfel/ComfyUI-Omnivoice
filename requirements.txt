@@ -6,3 +6,4 @@ pydub
 tensorboardx
 webdataset
 beautifulsoup4
+torchcodec
