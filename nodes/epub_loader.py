@@ -58,6 +58,12 @@ def _extract_chapters(epub_path):
                     if tag:
                         title = tag.get_text(strip=True)
                         break
+            # Remove title/heading elements so they don't appear in the body text
+            if soup.title:
+                soup.title.decompose()
+            for hn in ['h1', 'h2', 'h3']:
+                for tag in soup.find_all(hn):
+                    tag.decompose()
             for tag in soup.find_all(_BLOCK_TAGS):
                 tag.append(soup.new_string('\n\n'))
             text = soup.get_text(separator='')
