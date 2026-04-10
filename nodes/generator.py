@@ -116,8 +116,8 @@ class OmniVoiceGenerate:
                     ),
                 }),
                 "speed": ("FLOAT", {
-                    "default": 1.0, "min": 0.1, "max": 3.0, "step": 0.1,
-                    "tooltip": "Playback speed multiplier. 1.0 = normal, >1.0 = faster, <1.0 = slower.",
+                    "default": 1.0, "min": 0.3, "max": 3.0, "step": 0.1,
+                    "tooltip": "Playback speed multiplier. 1.0 = normal, >1.0 = faster, <1.0 = slower. Below 0.3 produces noise and extreme VRAM usage.",
                 }),
                 "num_step": ("INT", {
                     "default": 32, "min": 1, "max": 100,
