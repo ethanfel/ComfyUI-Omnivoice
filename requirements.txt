@@ -1,4 +1,4 @@
-transformers>=4.40.0
+transformers>=4.57.0
 accelerate
 soundfile
 numpy
